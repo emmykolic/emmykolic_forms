@@ -18,6 +18,19 @@ const Auth = () => {
       <button onClick={signInWithGoogle}>Sign in with Google</button>
     </div>
   );
+
+  // return (
+  //   <div>
+  //     {user ? (
+  //       <div>
+  //         <p>Welcome, {user.displayName}</p>
+  //         <button onClick={handleSignOut}>Sign Out</button>
+  //       </div>
+  //     ) : (
+  //       <button onClick={handleSignIn}>Sign In with Google</button>
+  //     )}
+  //   </div>
+  // );
 };
 
 export default Auth;
