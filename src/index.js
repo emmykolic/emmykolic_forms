@@ -1,19 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// Index.js
+import React, { useEffect, useState } from 'react';
+import { auth } from './firebase';
+import { useNavigate } from 'react-router-dom';
 
+const Index = () => {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        // If user is not logged in, navigate to the authentication page
+        navigate('/auth');
+      }
+    });
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    return () => unsubscribe();
+  }, [navigate]);
+
+  return (
+    <div>
+      {user ? (
+        <div>
+          <h1>Welcome, {user.displayName}</h1>
+          <p>Email: {user.email}</p>
+          <button onClick={() => auth.signOut()}>Sign out</button>
+        </div>
+      ) : (
+        // If user is not logged in, you can render a login/signup button here
+        <div>
+          <h1>Please sign in or sign up</h1>
+          <button onClick={() => navigate('/auth')}>Sign In / Sign Up</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Index;
